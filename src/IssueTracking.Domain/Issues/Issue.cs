@@ -12,7 +12,7 @@ namespace IssueTracking.Issues
         public Guid MileStoneId { get; set; }
         public string? Text { get; private set; }
         public string? Title { get; set; }
-        public Guid? AssignedUserId { get; set; }
+        public Guid? AssignedUserId { get; internal set; }
         public bool IsClosed { get; private set; }
         public bool IsLocked { get; private set; }
         public IssueCloseReason? CloseReason { get; private set; }

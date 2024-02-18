@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Volo.Abp.Application.Services;
 using Volo.Abp.Domain.Repositories;
+using Volo.Abp.Identity;
 using Volo.Abp.Specifications;
 using Volo.Abp.Users;
 
@@ -12,13 +13,29 @@ namespace IssueTracking.Issues
     public class IssueAppService : ApplicationService, IIssueAppService
     {
         private readonly IRepository<Issue, Guid> _issueRepository;
+        private readonly IRepository<IdentityUser, Guid> _userRepository;
+        private readonly IssueManager _issueManager;
 
-        public IssueAppService(IRepository<Issue, Guid> issueRepository)
+        public IssueAppService(IRepository<Issue, Guid> issueRepository, IRepository<IdentityUser, Guid> userRepository, IssueManager issueManager)
         {
             _issueRepository = issueRepository;
+            _userRepository = userRepository;
+            _issueManager = issueManager;
         }
 
-        public async Task CreateAsync(CreateCommentDto input)
+        public async Task AssignToAsync(AssignIssueDto input)
+        {
+            var issue = await _issueRepository.GetAsync(input.IssueId, includeDetails: true);
+            var user = await _userRepository.GetAsync(input.UserId, includeDetails: true);
+
+            await _issueManager.AssignToAsync(issue, user);
+            
+            await _issueRepository.UpdateAsync(issue, autoSave:true);
+
+            
+        }
+
+        public async Task AddCommentAsync(AddCommentDto input)
         {
             var issue = await _issueRepository.GetAsync(input.IssueId, includeDetails: true);
             issue.AddComment(CurrentUser.GetId(), input.Text);

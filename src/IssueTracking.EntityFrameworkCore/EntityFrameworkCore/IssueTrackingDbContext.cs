@@ -29,6 +29,8 @@ public class IssueTrackingDbContext :
 
     public DbSet<Issue> Issues { get; set; }
 
+    
+
     #region Entities from the modules
 
     /* Notice: We only implemented IIdentityDbContext and ITenantManagementDbContext

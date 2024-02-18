@@ -8,27 +8,17 @@ namespace IssueTracking.Issues
 {
     public interface IIssueAppService : IApplicationService
     {
-        Task CreateAsync(CreateCommentDto input);
+        Task AddCommentAsync(AddCommentDto input);
+        Task AssignToAsync(AssignIssueDto input);
         Task<List<IssueDto>> GetInActiveIssuesListAsync(GetIssueListDto input);
         Task<List<IssueDto>> GetInActiveIssuesFromMileStoneListAsync(GetIssueListDto input);
+
+
     }
 
-    public class GetIssueListDto
-    {
-        public Guid MileStoneId { get; set; }
-    }
-
-    public class IssueDto
-    {
-    }
-
-    public class CreateCommentDto
+    public class AssignIssueDto
     {
         public Guid IssueId { get; set; }
-        public string? Text { get; set; }
-    }
-
-    public class CommentDto
-    {
+        public Guid UserId { get; set; }
     }
 }
