@@ -6,25 +6,17 @@ using IssueTracking.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Volo.Abp.Domain.Repositories.EntityFrameworkCore;
 using Volo.Abp.EntityFrameworkCore;
+using Volo.Abp.Specifications;
 
 namespace IssueTracking.Issues
 {
     public class IssueRepository : EfCoreRepository<IssueTrackingDbContext, Issue, Guid>, IIssueRepository
     {
-    public IssueRepository(IDbContextProvider<IssueTrackingDbContext> dbContextProvider) : base(dbContextProvider)
-    {
-    }
-
-        public async Task<List<Issue>> GetInActiveIssuesAsync()
+        public IssueRepository(IDbContextProvider<IssueTrackingDbContext> dbContextProvider) : base(dbContextProvider)
         {
-            
-            // var daysAgo30 = DateTime.Now.Subtract(TimeSpan.FromDays(30));
-            var daysAgo30 = DateTime.Now.AddDays(-30);
-
-            var dbSet = await GetDbSetAsync();
-
-            return await dbSet.Where(x => !x.IsClosed && x.AssignedUserId == null && x.CreationTime < daysAgo30 && (x.LastCommentTime == null || x.LastCommentTime < daysAgo30) ).ToListAsync();
-
         }
+
+        public async Task<List<Issue>> GetIssuesAsync(ISpecification<Issue> spec)
+            => await (await GetDbSetAsync()).Where(spec.ToExpression()).ToListAsync();
     }
 }

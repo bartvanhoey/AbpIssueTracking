@@ -1,19 +1,15 @@
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Runtime.Serialization;
-using System.Threading.Tasks;
 using Volo.Abp;
 using Volo.Abp.Auditing;
 using Volo.Abp.Domain.Entities;
-using Volo.Abp.Users;
 
 namespace IssueTracking.Issues
 {
     public class Issue : AggregateRoot<Guid>,  IHasCreationTime
     {
         public Guid RepositoryId { get; private set; }
+        public Guid MileStoneId { get; set; }
         public string? Text { get; private set; }
         public string? Title { get; set; }
         public Guid? AssignedUserId { get; set; }
@@ -76,6 +72,11 @@ namespace IssueTracking.Issues
         public void AddComment(Guid userId, string? text)
         {
             Comments.Add(new Comment { UserId = userId, Text = text, IssueId = Id });
+        }
+
+        public bool IsInActive()
+        {
+            return new InActiveIssueSpecification().IsSatisfiedBy(this);
         }
 
         private Issue() { }
