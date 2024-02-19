@@ -5,7 +5,8 @@
     "Welcome": "Welcome",
     "LongWelcomeMessage": "Welcome to the application. This is a startup project based on the ABP framework. For more information, visit abp.io.",
     "IssueTracking:CanNotOpenLockedIssue" : "Can not open a locked issue! Unlock it first.",
-    "IssueTracking:ConcurrentOpenIssueLimit" :"A a user cannot have more than 3 issues open."
+    "IssueTracking:ConcurrentOpenIssueLimit" :"A a user cannot have more than 3 issues open.",
+    "IssueTracking:IssueWithSameTitleExist" : "Issue with the same title already exists"
 
 
   }

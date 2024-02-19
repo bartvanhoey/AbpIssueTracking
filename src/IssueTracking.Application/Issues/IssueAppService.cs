@@ -27,12 +27,8 @@ namespace IssueTracking.Issues
         {
             var issue = await _issueRepository.GetAsync(input.IssueId, includeDetails: true);
             var user = await _userRepository.GetAsync(input.UserId, includeDetails: true);
-
             await _issueManager.AssignToAsync(issue, user);
-            
             await _issueRepository.UpdateAsync(issue, autoSave:true);
-
-            
         }
 
         public async Task AddCommentAsync(AddCommentDto input)
@@ -61,6 +57,21 @@ namespace IssueTracking.Issues
             var queryable = await _issueRepository.GetQueryableAsync();
             var issues = await AsyncExecuter.ToListAsync(queryable.Where(new InActiveIssueSpecification()));
             return ObjectMapper.Map<List<Issue>, List<IssueDto>>(issues);
+        }
+
+        public async Task<IssueDto> CreateAsync(CreateIssueDto input)
+        {
+            //    var issue = new Issue(GuidGenerator.Create(), input.RepositoryId, input.Title, input.Text);
+
+            var issue = await _issueManager.CreateAsync(input.RepositoryId, input.Title, input.Text);
+            if (input.AssignedUserId.HasValue)
+            {
+                var user = await _userRepository.GetAsync(input.AssignedUserId.Value);
+                await _issueManager.AssignToAsync(issue, user);
+            }
+
+            var insertedIssue = await _issueRepository.InsertAsync(issue, autoSave:true);
+            return ObjectMapper.Map<Issue, IssueDto>(issue);
         }
     }
 

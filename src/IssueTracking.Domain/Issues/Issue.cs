@@ -21,7 +21,7 @@ namespace IssueTracking.Issues
         public DateTime CreationTime { get; set;  }
         public DateTime? LastCommentTime{ get; set;  }
 
-        public Issue(Guid id, Guid repositoryId, string title, string? text = null, Guid? assignedUserId = null) : base(id)
+        internal Issue(Guid id, Guid repositoryId, string title, string? text = null, Guid? assignedUserId = null) : base(id)
         {
             RepositoryId = repositoryId;
             Title = Check.NotNullOrWhiteSpace(title, nameof(title));

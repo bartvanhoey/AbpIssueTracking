@@ -10,12 +10,23 @@ using Volo.Abp.Identity;
 
 namespace IssueTracking.Issues
 {
-    public class IssueManager :  DomainService
+    public class IssueManager : DomainService
     {
         private readonly IRepository<Issue, Guid> _issueRepository;
 
-        public IssueManager(IRepository<Issue, Guid> issueRepository) 
+        public IssueManager(IRepository<Issue, Guid> issueRepository)
             => _issueRepository = issueRepository;
+
+        public async Task<Issue> CreateAsync(Guid repositoryId, string title, string? text = null)
+        {
+            if (await _issueRepository.AnyAsync(x => x.Title == title))
+            {
+                throw new BusinessException("IssueTracking:IssueWithSameTitleExist");
+            }
+            return new  Issue(GuidGenerator.Create(), repositoryId, title, text);
+        }
+
+
 
         public async Task AssignToAsync(Issue issue, IdentityUser user)
         {
@@ -24,11 +35,8 @@ namespace IssueTracking.Issues
             {
                 throw new BusinessException("IssueTracking:ConcurrentOpenIssueLimit");
             }
-            
+
             issue.AssignedUserId = user.Id;
-
-
-
         }
     }
 }
