@@ -10,7 +10,7 @@ namespace IssueTracking.Issues
     {
         public Guid RepositoryId { get; private set; }
         public Guid MileStoneId { get; set; }
-        public string? Text { get; private set; }
+        public string? Text { get; set; }
         public string? Title { get; set; }
         public Guid? AssignedUserId { get; internal set; }
         public bool IsClosed { get; private set; }
@@ -31,10 +31,8 @@ namespace IssueTracking.Issues
             Comments = [];
         }
 
-        public void SetTitle(string title)
-        {
-            Title = Check.NotNullOrWhiteSpace(title, nameof(title));
-        }
+        internal void SetTitle(string title) 
+            => Title = Check.NotNullOrWhiteSpace(title, nameof(title));
 
         public void Close(IssueCloseReason reason)
         {

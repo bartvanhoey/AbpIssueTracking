@@ -1,8 +1,5 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
 using Volo.Abp;
 using Volo.Abp.Domain.Repositories;
 using Volo.Abp.Domain.Services;
@@ -37,6 +34,16 @@ namespace IssueTracking.Issues
             }
 
             issue.AssignedUserId = user.Id;
+        }
+
+        public async Task ChangeTitleAsync(Issue issue, string? title)
+        {
+            if (issue.Title == title) return;
+            
+            if(await _issueRepository.AnyAsync(x => x.Title == title)){
+                throw new BusinessException("IssueTracking:IssueWithSameTitleExist");
+            }
+            issue.SetTitle(title!);
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using IssueTracking.Issues;
+using IssueTracking.Organizations;
 using Microsoft.EntityFrameworkCore;
 using Volo.Abp.AuditLogging.EntityFrameworkCore;
 using Volo.Abp.BackgroundJobs.EntityFrameworkCore;
@@ -28,6 +29,7 @@ public class IssueTrackingDbContext :
     /* Add DbSet properties for your Aggregate Roots / Entities here. */
 
     public DbSet<Issue> Issues { get; set; }
+    public DbSet<Organization> Organizations { get; set; }
 
     
 

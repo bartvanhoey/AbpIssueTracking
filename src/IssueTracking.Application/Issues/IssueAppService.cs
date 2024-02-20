@@ -73,6 +73,24 @@ namespace IssueTracking.Issues
             var insertedIssue = await _issueRepository.InsertAsync(issue, autoSave:true);
             return ObjectMapper.Map<Issue, IssueDto>(issue);
         }
+
+        public async Task<IssueDto> UpdateAsync(Guid id, UpdateIssueDto input)
+        {
+            var issue = await _issueRepository.GetAsync(id);
+            await _issueManager.ChangeTitleAsync(issue, input.Title);
+
+            if (input.AssignedUserId.HasValue)
+            {
+                var user = await _userRepository.GetAsync(input.AssignedUserId.Value);
+                await _issueManager.AssignToAsync(issue, user);
+            }
+
+            issue.Text = input.Text;
+
+            await _issueRepository.UpdateAsync(issue, autoSave:true);
+
+            return ObjectMapper.Map<Issue, IssueDto>(issue);
+        }
     }
 
 
